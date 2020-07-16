@@ -16,6 +16,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var textBottom: UITextField!
     @IBOutlet weak var shareButton: UIButton!
     
+    @IBOutlet weak var memeView: UIView!
     
     //MARK:- VIEW LIFECYCLE
     
@@ -28,7 +29,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        //            subscribeToKeyboardNotification()
+        subscribeToKeyboardNotification()
+        
         if let _ = imagePickerView.image {
             shareButton.isEnabled = true
         } else {
@@ -38,10 +40,28 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        //            unsubscribeFromKeyboardNotifications()
+        unsubscribeFromKeyboardNotifications()
         
     }
     
+    //MARK:- textField attributes
+    let memeTextAttributes: [NSAttributedString.Key: Any] = [
+        NSAttributedString.Key.strokeColor: UIColor.black /* TODO: fill in appropriate UIColor */,
+        NSAttributedString.Key.foregroundColor: UIColor.white/* TODO: fill in appropriate UIColor */,
+        NSAttributedString.Key.font: UIFont(name: "Impact", size: 40)!,
+        NSAttributedString.Key.strokeWidth: -5.0 /* TODO: fill in appropriate Float */
+    ]
+    func textFieldSetUp(){
+        textTop.defaultTextAttributes = memeTextAttributes
+        textBottom.defaultTextAttributes = memeTextAttributes
+    }
+    
+    func setupTextFields(){
+           for textfield : UITextField in [textBottom,textTop] {
+               textfield.defaultTextAttributes = memeTextAttributes
+        }
+        
+    }
     
     //MARK:-Image Picker Functionality
     @IBAction func pickAnImage(_ sender: UIBarButtonItem) {
@@ -63,28 +83,39 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     //MARK:-adjusting keyboard
-//        func getKeyboardHeight(_ notification: Notification)->CGFloat{
-//
-//            let userInfo = notification.userInfo
-//            let keyboardSize = userInfo![UIResponder.keyboardFrameEndUserInfoKey]
-//            return keyboardSize.cgRectValue.height
-//
-//        }
-//
-//        @objc func keyboardWillShow(_ notification:Notification){
-//
-//            view.frame.origin.y = -getKeyboardHeight(notification)
-//        }
-//
-//        func subscribeToKeyboardNotification(){
-//
-//            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification , object: nil)
-//        }
-//
-//        func unsubscribeFromKeyboardNotifications() {
-//
-//            NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-//        }
+        func getKeyboardHeight(_ notification: Notification)->CGFloat{
+
+            let userInfo = notification.userInfo
+            let keyboardSize = userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue
+            let height = keyboardSize.cgRectValue.height
+            return height
+
+        }
+
+        @objc func keyboardWillShow(_ notification:Notification){
+
+            view.frame.origin.y = -getKeyboardHeight(notification)
+        }
+
+        func subscribeToKeyboardNotification(){
+
+            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification , object: nil)
+        }
+
+        func unsubscribeFromKeyboardNotifications() {
+
+            NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        }
+
+    
+    //MARK: Move view up /down only for bottomTextField
+   
+    
+    @objc func keyboardWillHide(_ notification:Notification) {
+        if textBottom.isFirstResponder {
+            view.frame.origin.y = 0
+        }
+    }
     
     func save() {
             // Create the meme
@@ -103,4 +134,19 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     
+}
+
+
+//MARK:- UITextField Delegate Methods
+extension ViewController : UITextFieldDelegate {
+    
+    //MARK: Textfield empties first time
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField.text == "BOTTOM" || textField.text == "TOP" {
+            textField.text = ""
+        }
+    }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+    }
 }
