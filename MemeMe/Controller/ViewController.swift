@@ -45,23 +45,23 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     //MARK:- textField attributes
-    let memeTextAttributes: [NSAttributedString.Key: Any] = [
-        NSAttributedString.Key.strokeColor: UIColor.black /* TODO: fill in appropriate UIColor */,
-        NSAttributedString.Key.foregroundColor: UIColor.white/* TODO: fill in appropriate UIColor */,
-        NSAttributedString.Key.font: UIFont(name: "Impact", size: 40)!,
-        NSAttributedString.Key.strokeWidth: -5.0 /* TODO: fill in appropriate Float */
-    ]
-    func textFieldSetUp(){
-        textTop.defaultTextAttributes = memeTextAttributes
-        textBottom.defaultTextAttributes = memeTextAttributes
-    }
-    
-    func setupTextFields(){
-           for textfield : UITextField in [textBottom,textTop] {
-               textfield.defaultTextAttributes = memeTextAttributes
-        }
-        
-    }
+//    let memeTextAttributes: [NSAttributedString.Key: Any] = [
+//        NSAttributedString.Key.strokeColor: UIColor.black /* TODO: fill in appropriate UIColor */,
+//        NSAttributedString.Key.foregroundColor: UIColor.white/* TODO: fill in appropriate UIColor */,
+//        NSAttributedString.Key.font: UIFont(name: "Impact", size: 40)!,
+//        NSAttributedString.Key.strokeWidth: -5.0 /* TODO: fill in appropriate Float */
+//    ]
+//    func textFieldSetUp(){
+//        textTop.defaultTextAttributes = memeTextAttributes
+//        textBottom.defaultTextAttributes = memeTextAttributes
+//    }
+//    
+//    func setupTextFields(){
+//           for textfield : UITextField in [textBottom,textTop] {
+//               textfield.defaultTextAttributes = memeTextAttributes
+//        }
+//        
+//    }
     
     //MARK:-Image Picker Functionality
     @IBAction func pickAnImage(_ sender: UIBarButtonItem) {
